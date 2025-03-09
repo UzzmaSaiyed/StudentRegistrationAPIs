@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            max-width: 400px;
+            margin: auto;
+            box-shadow: 0px 0px 10px gray;
+            border-radius: 8px;
+        }
+        input, button {
+            display: block;
+            width: 90%;
+            padding: 10px;
+            margin: 10px auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background: blue;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Student Registration</h2>
+    <form id="studentForm">
+        <input type="text" id="id" placeholder="Student ID" required>
+        <input type="text" id="name" placeholder="Name" required>
+        <input type="number" id="age" placeholder="Age" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="text" id="rollno" placeholder="Roll No." required>
+        <input type="text" id="course" placeholder="Course" required>
+        <button type="submit">Register Student</button>
+    </form>
+
+    <h3>Search Student</h3>
+    <input type="text" id="searchId" placeholder="Enter Student ID">
+    <button onclick="getStudent()">Get Student</button>
+    <pre id="output"></pre>
+
+    <script>
+        document.getElementById('studentForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const student = {
+                id: document.getElementById('id').value,
+                name: document.getElementById('name').value,
+                age: document.getElementById('age').value,
+                email: document.getElementById('email').value,
+                rollno: document.getElementById('rollno').value,
+                course: document.getElementById('course').value
+            };
+
+            const response = await fetch('/StudentRegistration/api/students/registerStudent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(student)
+            });
+
+            const data = await response.json();
+            alert(data.message);
+        });
+
+        async function getStudent() {
+            const id = document.getElementById('searchId').value;
+            const response = await fetch(`/StudentRegistration/api/students/getStudent/${id}`);
+            const data = await response.json();
+            document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+        }
+    </script>
+
+</body>
+</html>
